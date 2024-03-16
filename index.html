@@ -16,38 +16,55 @@
 <div class="custom-file mb-3">
 <input type="file" class="custom-file-input" id="jsFile" required>
 <label class="custom-file-label" for="jsFile">Choose .js file...</label>
+<div id="progress-div" class="progress" style="display:none;">
+<div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
 </div>
 <button type="submit" class="btn btn-primary">Obfuscate</button>
 </form>
 </div>
 
 <script>
-$(document).ready(function () {
 $("#js-obfuscator-form").on('submit', function(e) {
 e.preventDefault();
+$('#progress-div').show();
 var fileInput = $('#jsFile')[0];
 var file = fileInput.files[0];
 if(file) {
 var reader = new FileReader();
+
+reader.onprogress = function(data) {
+if (data.lengthComputable) {                                            
+var progress = parseInt(((data.loaded / data.total) * 50), 10); // just for reading
+$('#progress-bar').width(progress + '%');
+$('#progress-bar').html(progress + '%');
+}
+};
+
 reader.onload = function(e) {
+$('#progress-bar').width('50%');
+$('#progress-bar').html('50%');
+
 var obfuscationResult = JavaScriptObfuscator.obfuscate(reader.result, {
 compact: true,
 controlFlowFlattening: true
 });
+$('#progress-bar').width('100%');
+$('#progress-bar').html('100%');
+
 var blob = new Blob([obfuscationResult.getObfuscatedCode()], {type : 'application/javascript'});
 var url = URL.createObjectURL(blob);
 var a = document.createElement('a');
 a.download = file.name.replace('.js', '-obfuscated.js');
 a.href = url;
 a.click();
+
+// reset progress bar after download
+$('#progress-bar').width('0%');
+$('#progress-bar').html('0%');
+$('#progress-div').hide();
 };
 reader.readAsText(file);
 }
-});
-$('.custom-file-input').on('change', function() {
-var fileName = $(this).val().split('\').pop();
-$(this).next('.custom-file-label').addClass("selected").html(fileName);
-});
 });
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
