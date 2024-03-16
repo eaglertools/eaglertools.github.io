@@ -12,7 +12,7 @@
 <body>
 
 <div class="container">
-<h2>JavaScript Obfuscator</h2>
+<h2>Javascript Eaglerforge mod Obfuscator</h2>
 <form id="js-obfuscator-form">
 <div class="custom-file mb-3">
 <input type="file" class="custom-file-input" id="jsFile" required accept=".js">
@@ -36,8 +36,8 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(reader.result, {
 compact: true,
 controlFlowFlattening: true
 });
-var obfuscationResult2 = SakeJS.obfuscate(reader.result)
-var blob = new Blob([obfuscationResult2.getObfuscatedCode()], {type : 'application/javascript'});
+var obfuscationResult2 = SakeJS.obfuscate(obfuscationResult.getObfuscatedCode())
+var blob = new Blob([obfuscationResult2], {type : 'application/javascript'});
 var url = URL.createObjectURL(blob);
 var a = document.createElement('a');
 a.download = file.name.replace('.js', '-obfuscated.js');
