@@ -76,7 +76,7 @@ body {
 <input type="file" class="custom-file-input" id="jsFile" required="" accept=".js">
 <label class="custom-file-label" for="jsFile">Choose .js file...</label>
 </div>
-<button type="submit" class="btn btn-primary">Obfuscate</button>
+<button type="submit" class="btn btn-primary" id="obfuscateButton">Obfuscate</button>
 <div id="file-processed" style="display:none; margin-top: 15px;">File has been processed.</div>
 </form>
 <h1 style="margin-top: 30px;">obfuscators used:</h1>
@@ -106,8 +106,15 @@ var url = URL.createObjectURL(blob);
 var a = document.createElement('a');
 a.download = file.name.replace('.js', '-obfuscated.js');
 a.href = url;
+a.textContent = 'Download Obfuscated File';
+a.classList.add('btn', 'btn-primary');
+$('#obfuscateButton').replaceWith(a);
 $('#file-processed').show();
-a.click();
+a.addEventListener('click', function() {
+  setTimeout(function() {
+    location.reload();
+  }, 1000); // Reload after 1 second
+});
 };
 reader.readAsText(file);
 }
